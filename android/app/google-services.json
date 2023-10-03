@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "162945104979",
+    "project_id": "crescendo-d3260",
+    "storage_bucket": "crescendo-d3260.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:162945104979:android:7543cbb8a5b90ca8c41aa6",
+        "android_client_info": {
+          "package_name": "com.example.crescendo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhB3WUlYVw1QSF3_ccO6h02sVHfcRBBj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
