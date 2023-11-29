@@ -15,8 +15,7 @@ class Login extends StatelessWidget {
   Auth _auth = Auth();
   String _email = '';
   String _password = '';
-  String adminPassword = 'password12345678';
-  String adminEmail = 'admin_crescendo@gmail.com';
+  
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   static const String id = 'login';
 
