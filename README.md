@@ -1,9 +1,14 @@
 # Crescendo
 
-!crescendo_1.png Image
+<img src="/images/Crescendo_1.png" alt="Crescendo Image">
 
 ## Overview
 Crescendo is a cutting-edge E-commerce application specialized in Cosmetics.
+
+## Everything is set
+- From the login page to the shopping cart everything is made with care for a User friendly experience
+- An admin panel for uploading products, managing products and tracking orders
+
 
 ## Features
 - **User-friendly Interface**: Easy navigation through various cosmetic products.
