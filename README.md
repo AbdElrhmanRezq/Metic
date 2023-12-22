@@ -1,6 +1,6 @@
 # Crescendo
 
-!Crescendo Image
+!crescendo_1.png Image
 
 ## Overview
 Crescendo is a cutting-edge E-commerce application specialized in Cosmetics.
@@ -22,4 +22,4 @@ For any inquiries or feedback, please contact AbdElrhman Ahmed at `YourEmail@exa
 1. Flutter
 2. Firebase
 3. Hive
-4. Statemanagment
+4. State management
