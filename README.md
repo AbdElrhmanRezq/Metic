@@ -19,6 +19,7 @@ Crescendo is a cutting-edge E-commerce application specialized in Cosmetics.
 2. Navigate to the project directory: `cd Crescendo`
 3. Install dependencies: `flutter pub get`
 4. Run the app: `flutter run`
+5. Or download the release attached in the repo
 
 
 ## Technologies used
