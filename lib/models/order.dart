@@ -7,6 +7,7 @@ class MyOrder {
   late String state;
   late String docId;
   late String email;
+  late String deliveryAddress;
 
   MyOrder(
       {required this.address,
@@ -16,5 +17,6 @@ class MyOrder {
       required this.name,
       required this.additional,
       required this.docId,
-      required this.email});
+      required this.email,
+      required this.deliveryAddress});
 }

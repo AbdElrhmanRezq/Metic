@@ -1,6 +1,7 @@
 import 'package:crescendo/consts.dart';
 import 'package:crescendo/models/cart.dart';
 import 'package:crescendo/pages/admin/add_product.dart';
+import 'package:crescendo/pages/admin/add_product_edited.dart';
 import 'package:crescendo/pages/admin/admin_page.dart';
 import 'package:crescendo/pages/admin/manage_product.dart';
 import 'package:crescendo/pages/admin/order_details.dart';
@@ -14,6 +15,7 @@ import 'package:crescendo/pages/reset_password.dart';
 import 'package:crescendo/pages/signup.dart';
 import 'package:crescendo/pages/user/product_info.dart';
 import 'package:crescendo/provider/admin_mode.dart';
+import 'package:crescendo/themes/dark_theme.dart';
 import 'package:crescendo/themes/light_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
               initialRoute: isUserLoggedIn ? MyHiddenDrawer.id : Login.id,
               debugShowCheckedModeBanner: false,
               theme: lightTheme,
+              darkTheme: darkTheme,
               routes: {
                 Login.id: (context) => Login(),
                 Signup.id: (context) => Signup(),
@@ -65,6 +68,7 @@ class MyApp extends StatelessWidget {
                 MyHiddenDrawer.id: (context) => MyHiddenDrawer(),
                 OrderDetails.id: (context) => OrderDetails(),
                 EditUser.id: (context) => EditUser(),
+                AddProductEditted.id: (context) => AddProductEditted()
               },
             ),
           );

@@ -64,13 +64,6 @@ class Signup extends StatelessWidget {
               ),
               SizedBox(height: height * 0.01),
               CustomTextField(
-                hint: "Address",
-                onClick: (value) {
-                  _address = value!;
-                },
-              ),
-              SizedBox(height: height * 0.01),
-              CustomTextField(
                 hint: "Password",
                 onClick: (value) {
                   _password = value!;

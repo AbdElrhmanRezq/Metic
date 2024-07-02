@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:crescendo/models/cart_item.dart';
 import '../consts.dart';
 import '../models/product.dart';
+import '../models/product_multi_photos.dart';
 
 class Store {
   final _store = FirebaseFirestore.instance;
@@ -17,6 +18,18 @@ class Store {
       KProductPrice: product.price,
       KProductDescription: product.description,
       KProductImageUrl: product.imageUrl
+    });
+  }
+
+  addProductMultiPhotos(MultiProduct product) async {
+    var docRef = _store.collection(KProductCollection).doc();
+    await docRef.set({
+      KProductName: product.name,
+      KProductPrice: product.price,
+      KProductDescription: product.description,
+    });
+    product.imageUrls?.forEach((url) {
+      docRef.collection(KProductImages).add({KProductImageUrl: url});
     });
   }
 
@@ -32,6 +45,22 @@ class Store {
     return url as String;
   }
 
+  Future<List<String>> uploadMultiPhotos(
+      List<String> fileNames, List<String> filePaths) async {
+    List<String> urls = [];
+    for (int i = 0; i < fileNames.length; i++) {
+      File file = File(filePaths[i]);
+      try {
+        await _storage.ref('products/${fileNames[i]}').putFile(file);
+        urls.add(
+            await _storage.ref('products/${fileNames[i]}').getDownloadURL());
+      } on FirebaseException catch (e) {
+        print(e);
+      }
+    }
+    return urls;
+  }
+
   Future<List<Product>> getProduct() async {
     List<Product> products = [];
     await _store.collection('products').get().then((snapshot) {
@@ -41,6 +70,33 @@ class Store {
             price: doc[KProductPrice],
             description: doc[KProductDescription],
             imageUrl: doc[KProductImageUrl]));
+      });
+    });
+    return products;
+  }
+
+  Future<List<MultiProduct>> getProductMultiPhotos() async {
+    List<MultiProduct> products = [];
+    await _store.collection('products').get().then((snapshot) {
+      snapshot.docs.forEach((doc) async {
+        String docId = doc.id;
+        List<String> urls = [];
+        await _store
+            .collection('products')
+            .doc(docId)
+            .collection(KProductImages)
+            .get()
+            .then((snapshot) {
+          snapshot.docs.forEach((doc) {
+            urls.add(doc[KProductImageUrl]);
+          });
+        });
+
+        products.add(MultiProduct(
+            name: doc[KProductName],
+            price: doc[KProductPrice],
+            description: doc[KProductDescription],
+            imageUrls: urls));
       });
     });
     return products;
@@ -80,15 +136,30 @@ class Store {
   }
 
   Stream<QuerySnapshot> loadProcuts() {
-    return _store.collection('products').snapshots();
+    return _store.collection(KProductCollection).snapshots();
+  }
+
+  Future<List<DocumentSnapshot>> loadProcutImages(String docId) async {
+    QuerySnapshot snapshot = await _store
+        .collection(KProductCollection)
+        .doc(docId)
+        .collection(KProductImages)
+        .get();
+    return snapshot.docs;
   }
 
   void deleteProduct(docId) {
-    _store.collection('products').doc(docId).delete();
+    _store.collection(KProductCollection).doc(docId).delete();
   }
 
-  void editProduct(data, docId) async {
-    await _store.collection('products').doc(docId).update(data);
+  editProduct(data, docId) async {
+    await _store.collection(KProductCollection).doc(docId).update(data);
+  }
+
+  removeDiscount(docId) async {
+    await _store.collection(KProductCollection).doc(docId).update({
+      KProductDiscount: FieldValue.delete(),
+    });
   }
 
   void storeOrder(
@@ -96,6 +167,7 @@ class Store {
       String phone,
       String userName,
       String email,
+      String deliveryAddress,
       String totalPrice,
       String additional,
       List<CartItem> cart,
@@ -106,6 +178,7 @@ class Store {
       KAddress: address,
       KPhone: phone,
       KUserName: userName,
+      KOrderDeliveryAddress: deliveryAddress,
       KOrderState: state,
       KOrderAdditional: additional,
       KUserEmail: email
@@ -115,6 +188,7 @@ class Store {
         KProductName: item.product.name,
         KProductPrice: item.product.price,
         KProductQuantity: item.quantity,
+        KProductDiscount: item.product.discount,
       });
     }
   }

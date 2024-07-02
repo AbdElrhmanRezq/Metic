@@ -11,7 +11,7 @@ class CustomCartButton extends StatelessWidget {
         },
         icon: Icon(
           Icons.shopping_cart,
-          color: Colors.black,
+          color: Theme.of(context).colorScheme.secondary,
         ));
   }
 }

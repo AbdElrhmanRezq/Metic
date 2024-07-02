@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crescendo/components/custom_list_tile.dart';
 import 'package:crescendo/components/custom_logout_button.dart';
+import 'package:crescendo/components/custom_progress_indicator.dart';
 import 'package:crescendo/consts.dart';
 import 'package:crescendo/services/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,9 +58,6 @@ class _ProfileState extends State<Profile> {
                           description: snapshot.data?.name as String,
                           title: "Name"),
                       CustomListTile(
-                          description: snapshot.data?.address as String,
-                          title: "Address"),
-                      CustomListTile(
                           description: snapshot.data?.phone as String,
                           title: "Phone"),
                       Row(
@@ -86,7 +84,7 @@ class _ProfileState extends State<Profile> {
                     ],
                   ));
             } else {
-              return CircularProgressIndicator();
+              return const CustomProgressIndicator();
             }
           }),
     );

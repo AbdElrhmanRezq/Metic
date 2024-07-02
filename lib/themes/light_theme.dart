@@ -12,7 +12,7 @@ ThemeData lightTheme = ThemeData(
         centerTitle: true),
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
-      background: Colors.grey[200] as Color,
+      background: Colors.white,
       primary: Colors.white as Color,
       secondary: Colors.deepPurple as Color,
     ));

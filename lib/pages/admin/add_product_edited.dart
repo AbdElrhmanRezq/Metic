@@ -1,6 +1,7 @@
 import 'package:crescendo/components/custom_button.dart';
 import 'package:crescendo/consts.dart';
 import 'package:crescendo/models/product.dart';
+import 'package:crescendo/models/product_multi_photos.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_progress_hud/flutter_progress_hud.dart';
@@ -9,16 +10,16 @@ import '../../components/custom_bottom_sheet.dart';
 import '../../components/custom_textfield.dart';
 import '../../services/store.dart';
 
-class AddProduct extends StatefulWidget {
-  static final String id = 'add-product';
+class AddProductEditted extends StatefulWidget {
+  static final String id = 'add-product-editted';
 
   @override
-  State<AddProduct> createState() => _AddProductState();
+  State<AddProductEditted> createState() => _AddProductEdittedState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _AddProductEdittedState extends State<AddProductEditted> {
   late String _name, _price, _description;
-  var path, name;
+  List<String> path = [], name = [];
   GlobalKey<FormState> _key = GlobalKey<FormState>();
   Store _store = Store();
 
@@ -36,7 +37,7 @@ class _AddProductState extends State<AddProduct> {
 
   selectPhoto() async {
     final result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
+        allowMultiple: true,
         allowedExtensions: ['png', 'jpg', 'jpeg'],
         type: FileType.custom);
     if (result == null) {
@@ -51,8 +52,15 @@ class _AddProductState extends State<AddProduct> {
         },
       );
     }
-    path = result?.files.single.path;
-    name = result?.files.single.name;
+    result?.files.forEach((file) {
+      path.add(file.path as String);
+      name.add(file.name as String);
+    });
+    print("================================================");
+    print(path);
+    print(name);
+    //path = result?.files.single.path;
+    //name = result?.files.single.name;
     setState(() {});
   }
 
@@ -92,19 +100,20 @@ class _AddProductState extends State<AddProduct> {
                 SizedBox(height: 20),
                 CustomButton(callback: selectPhoto, text: "Select photo"),
                 Visibility(
-                  visible: name == null ? false : true,
-                  child: name == null
-                      ? const SizedBox(
-                          height: 10,
-                        )
-                      : Center(
-                          child: Text(
-                            name as String,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                ),
+                    visible: name.isEmpty ? false : true,
+                    child: name.isEmpty
+                        ? const SizedBox(
+                            height: 10,
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: name.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(name[index] as String),
+                              );
+                            },
+                          )),
                 SizedBox(height: 20),
                 Builder(builder: (context) {
                   return CustomButton(
@@ -112,15 +121,18 @@ class _AddProductState extends State<AddProduct> {
                         final progress = ProgressHUD.of(context);
                         progress?.show();
                         if (_key.currentState?.validate() ?? true) {
-                          String imageUrl =
-                              await _store.uploadPhoto(name, path);
+                          List<String> imageUrls =
+                              await _store.uploadMultiPhotos(name, path);
                           _key.currentState?.save();
-                          _store.addProduct(Product(
+                          _store.addProductMultiPhotos(MultiProduct(
                               name: _name,
-                              price: _price,
                               description: _description,
-                              imageUrl: imageUrl));
-                          showMySheet("Product Addeed", height);
+                              price: _price,
+                              imageUrls: imageUrls));
+                          print(
+                              "================================================");
+                          print(imageUrls);
+                          showMySheet("Product Added", height);
                         }
                         progress?.dismiss();
                       },

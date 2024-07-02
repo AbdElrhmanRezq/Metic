@@ -17,8 +17,9 @@ class MyHiddenDrawer extends StatefulWidget {
 }
 
 class _MyHiddenDrawerState extends State<MyHiddenDrawer> {
-  final selectedText =
-      TextStyle(color: Colors.black, fontWeight: FontWeight.bold);
+  final selectedText = TextStyle(
+      color: const Color.fromARGB(255, 255, 255, 255),
+      fontWeight: FontWeight.bold);
   final baseText = TextStyle(color: Colors.grey, fontWeight: FontWeight.normal);
   List<ScreenHiddenDrawer> _pages = [];
   @override
@@ -71,7 +72,7 @@ class _MyHiddenDrawerState extends State<MyHiddenDrawer> {
       initPositionSelected: 0,
       slidePercent: 50,
       actionsAppBar: [const CustomCartButton()],
-      tittleAppBar: CutsomLogo(percent: 0.18),
+      tittleAppBar: Text("Metics"),
     );
   }
 }

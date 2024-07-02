@@ -25,12 +25,6 @@ class AdminPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomButton(
-                  callback: () {
-                    Navigator.of(context).pushNamed('add-product');
-                  },
-                  text: "Add product",
-                ),
                 const SizedBox(height: 10),
                 CustomButton(
                   callback: () {

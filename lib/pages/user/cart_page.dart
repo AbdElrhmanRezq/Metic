@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crescendo/components/custom_back_icon.dart';
+import 'package:crescendo/components/custom_bottom_sheet.dart';
 import 'package:crescendo/consts.dart';
 import 'package:crescendo/models/cart_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,50 +19,103 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  TextEditingController _controller = TextEditingController();
-  void order(String totalPrice, List<CartItem> cart) async {
-    String additional;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Any additional requests?"),
-          content: TextField(
-            controller: _controller,
-          ),
-          actions: [
-            TextButton(
-                onPressed: () async {
-                  additional = _controller.text.trim();
-                  Store _store = Store();
-                  final _user = FirebaseAuth.instance.currentUser;
-                  DocumentSnapshot userDoc =
-                      await _store.getUserByEmail(_user?.email as String);
-                  Map<String, dynamic> userDetails =
-                      userDoc.data() as Map<String, dynamic>;
+  TextEditingController _additionalController = TextEditingController();
+  TextEditingController _addressController = TextEditingController();
 
-                  _store.storeOrder(
-                      userDetails[KUserAddress],
-                      userDetails[KUserPhone],
-                      userDetails[KUserName],
-                      userDetails[KUserEmail],
-                      totalPrice,
-                      additional,
-                      cart,
-                      'Active');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Order sent")));
-                  Navigator.of(context).pop();
-                  Provider.of<Cart>(context, listen: false).clearCart();
-                },
-                child: const Text(
-                  "Confirm",
-                  style: TextStyle(color: Colors.black),
-                ))
-          ],
-        );
-      },
-    );
+  Text alertMessage = const Text(
+    "Please enter your delivery address",
+    style: TextStyle(color: Colors.red),
+  );
+  Text normalMessage = const Text(
+    "Please enter your delivery address",
+    style: TextStyle(color: Colors.black),
+  );
+
+  void order(String totalPrice, List<CartItem> cart, double height) async {
+    if (cart.isEmpty) {
+      return showModalBottomSheet(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        context: context,
+        builder: (context) {
+          return CustomButtomSheet(
+              textMessage: "Cart is Empty", height: height);
+        },
+      );
+    } else {
+      String additional;
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: normalMessage,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _additionalController,
+                  decoration: InputDecoration(
+                      hintText: "Additional Requests (Optional)"),
+                ),
+                TextField(
+                  controller: _addressController,
+                  decoration:
+                      InputDecoration(hintText: "Delivery Address in details"),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () async {
+                    if (!(_addressController.text.isEmpty)) {
+                      additional = _additionalController.text.trim();
+                      String deliveryAddress = _addressController.text.trim();
+                      Store _store = Store();
+                      final _user = FirebaseAuth.instance.currentUser;
+                      DocumentSnapshot userDoc =
+                          await _store.getUserByEmail(_user?.email as String);
+                      Map<String, dynamic> userDetails =
+                          userDoc.data() as Map<String, dynamic>;
+
+                      _store.storeOrder(
+                          userDetails[KUserAddress],
+                          userDetails[KUserPhone],
+                          userDetails[KUserName],
+                          userDetails[KUserEmail],
+                          deliveryAddress,
+                          totalPrice,
+                          additional,
+                          cart,
+                          'Active');
+                      Navigator.of(context).pop();
+                      Provider.of<Cart>(context, listen: false).clearCart();
+
+                      showModalBottomSheet(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20))),
+                        context: context,
+                        builder: (context) {
+                          return CustomButtomSheet(
+                              textMessage: "Order sent", height: height);
+                        },
+                      );
+                    } else {
+                      normalMessage = alertMessage;
+                      setState(() {});
+                    }
+                  },
+                  child: const Text(
+                    "Confirm",
+                    style: TextStyle(color: Colors.black),
+                  ))
+            ],
+          );
+        },
+      );
+    }
   }
 
   void emptyCart() {
@@ -76,12 +130,14 @@ class _CartPageState extends State<CartPage> {
                   Provider.of<Cart>(context, listen: false).clearCart();
                   Navigator.of(context).pop();
                 },
-                child: const Text("Empty")),
+                child:
+                    const Text("Empty", style: TextStyle(color: Colors.black))),
             TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text("Cancel"))
+                child:
+                    const Text("Cancel", style: TextStyle(color: Colors.black)))
           ],
         );
       },
@@ -90,11 +146,18 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     String sumTotalAmount(List<CartItem> cart) {
       double totalAmount = 0;
       for (var item in cart) {
-        totalAmount +=
-            item.quantity * (int.parse(item.product.price as String));
+        if (item.product.discount == null) {
+          totalAmount +=
+              item.quantity * (double.parse(item.product.price as String));
+        } else {
+          totalAmount += item.quantity *
+              (double.parse(item.product.price as String) -
+                  double.parse(item.product.discount as String));
+        }
       }
       return totalAmount.toString();
     }
@@ -139,10 +202,16 @@ class _CartPageState extends State<CartPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ListTile(
-                            leading: Container(
-                              child: Image.network(
-                                  fit: BoxFit.cover,
-                                  _cartItems[index].product.imageUrl as String),
+                            leading: AspectRatio(
+                              aspectRatio: 1 / 1,
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(KBorderRadius),
+                                child: Image.network(
+                                    fit: BoxFit.cover,
+                                    _cartItems[index].product.imageUrls?.first
+                                        as String),
+                              ),
                             ),
                             title:
                                 Text(_cartItems[index].product.name as String),
@@ -188,8 +257,18 @@ class _CartPageState extends State<CartPage> {
                                     },
                                     icon: Icon(Icons.delete),
                                   ),
-                                  Text(
-                                      "Price: ${(_cartItems[index].quantity * (int.parse(_cartItems[index].product.price as String))).toString()}")
+                                  Builder(builder: (context) {
+                                    String text;
+                                    if (_cartItems[index].product.discount ==
+                                        null) {
+                                      text =
+                                          "Price: ${(_cartItems[index].quantity * (double.parse(_cartItems[index].product.price as String)))}";
+                                    } else {
+                                      text =
+                                          "Price: ${(_cartItems[index].quantity * (double.parse(_cartItems[index].product.price as String) - double.parse(_cartItems[index].product.discount as String))).toString()}";
+                                    }
+                                    return Text(text);
+                                  })
                                 ],
                               ),
                             ),
@@ -202,30 +281,41 @@ class _CartPageState extends State<CartPage> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.deepPurple[500],
-                    borderRadius: BorderRadius.circular(10)),
+                    color: Theme.of(context).colorScheme.background,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10))),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Text(
-                          "Total Amount: ${sumTotalAmount(_cartItems)} EGP",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Total : ",
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              "${sumTotalAmount(_cartItems)} EGP",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            )
+                          ],
                         ),
                       ),
                       GestureDetector(
                         onTap: () {
-                          order(sumTotalAmount(_cartItems), _cartItems);
+                          order(sumTotalAmount(_cartItems), _cartItems, height);
                         },
                         child: Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(20),
                             color: Colors.white,
                           ),
                           child: const Center(

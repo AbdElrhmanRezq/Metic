@@ -23,11 +23,17 @@ class _OrderDetailsState extends State<OrderDetails> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<OrderItem> items = [];
+
           snapshot.data?.docs.forEach((doc) {
+            final docData = doc.data() as Map<String, dynamic>;
             items.add(OrderItem(
-                name: doc[KProductName],
-                price: doc[KProductPrice],
-                quantity: doc[KProductQuantity]));
+              name: doc[KProductName],
+              price: doc[KProductPrice],
+              quantity: doc[KProductQuantity],
+              discount: docData.containsKey(KProductDiscount)
+                  ? doc[KProductDiscount]
+                  : null,
+            ));
           });
           return Scaffold(
             body: Container(
@@ -35,10 +41,40 @@ class _OrderDetailsState extends State<OrderDetails> {
               child: ListView.builder(
                 itemCount: items.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(items[index].name),
-                    subtitle: Text(
-                        '${items[index].price} , ${items[index].quantity.toString()}'),
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(KBorderRadius),
+                      ),
+                      child: ListTile(
+                        title: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text("Product: ${items[index].name}"),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Builder(builder: (context) {
+                                String text;
+                                if (items[index].discount == null) {
+                                  text =
+                                      "Price: ${(items[index].quantity * (double.parse(items[index].price as String)))}";
+                                } else {
+                                  text =
+                                      "Price: ${(items[index].quantity * (double.parse(items[index].price as String) - double.parse(items[index].discount as String))).toString()}";
+                                }
+                                return Text(text);
+                              }),
+                              Text("Quantity: ${items[index].quantity}")
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),

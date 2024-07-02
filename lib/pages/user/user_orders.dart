@@ -1,3 +1,4 @@
+import 'package:crescendo/components/custom_progress_indicator.dart';
 import 'package:crescendo/services/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _UserOrdersState extends State<UserOrders> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Change the order state?"),
+            title: Text("Cancel Order?"),
             actions: [
               TextButton(
                   onPressed: () {
@@ -56,7 +57,8 @@ class _UserOrdersState extends State<UserOrders> {
                     totalPrice: doc[KTotalPrice],
                     state: doc[KOrderState],
                     docId: doc.id,
-                    email: doc[KUserEmail]),
+                    email: doc[KUserEmail],
+                    deliveryAddress: doc[KOrderDeliveryAddress]),
               );
             });
             return Container(
@@ -64,26 +66,48 @@ class _UserOrdersState extends State<UserOrders> {
               child: ListView.builder(
                 itemCount: orders.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () {
-                      Navigator.of(context).pushNamed('order-details',
-                          arguments: orders[index].docId);
-                    },
-                    title: Text(orders[index].name),
-                    subtitle: Text(
-                        '${orders[index].phone} , ${orders[index].totalPrice}'),
-                    trailing: TextButton(
-                      onPressed: () {
-                        if (orders[index].state == KOrderStateActive) {
-                          changeState(orders[index].docId);
-                        }
-                      },
-                      child: Text(
-                        orders[index].state,
-                        style: TextStyle(
-                            color: orders[index].state == 'Active'
-                                ? Colors.green
-                                : Colors.red),
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(KBorderRadius),
+                          color: Theme.of(context).colorScheme.primary),
+                      child: ListTile(
+                        onTap: () {
+                          Navigator.of(context).pushNamed('order-details',
+                              arguments: orders[index].docId);
+                        },
+                        title: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                              "Delivery Address: ${orders[index].deliveryAddress}"),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Additional: ${orders[index].additional}'),
+                              Text('Total Price: ${orders[index].totalPrice}')
+                            ],
+                          ),
+                        ),
+                        trailing: TextButton(
+                          onPressed: () {
+                            if (orders[index].state == KOrderStateActive) {
+                              changeState(orders[index].docId);
+                            }
+                          },
+                          child: Text(
+                            orders[index].state,
+                            style: TextStyle(
+                                color: orders[index].state == 'Active'
+                                    ? Colors.green
+                                    : Colors.red),
+                          ),
+                        ),
                       ),
                     ),
                   );
@@ -91,7 +115,7 @@ class _UserOrdersState extends State<UserOrders> {
               ),
             );
           } else {
-            return CircularProgressIndicator();
+            return const CustomProgressIndicator();
           }
         },
       ),

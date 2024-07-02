@@ -18,14 +18,14 @@ class _ViewOrdersState extends State<ViewOrders> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Change the order state?"),
+          title: const Text("Change to finished?"),
           actions: [
             TextButton(
                 onPressed: () {
                   _store.editOrderState(docId, KOrderStateFinished);
                   Navigator.of(context).pop();
                 },
-                child: Text(
+                child: const Text(
                   "Confirm",
                   style: TextStyle(color: Colors.black),
                 ))
@@ -45,14 +45,16 @@ class _ViewOrdersState extends State<ViewOrders> {
             if (doc[KOrderState] == state) {
               orders.add(
                 MyOrder(
-                    address: doc[KAddress],
-                    name: doc[KUserName],
-                    additional: doc[KOrderAdditional],
-                    phone: doc[KPhone],
-                    totalPrice: doc[KTotalPrice],
-                    state: doc[KOrderState],
-                    docId: doc.id,
-                    email: doc[KUserEmail]),
+                  address: doc[KAddress],
+                  name: doc[KUserName],
+                  additional: doc[KOrderAdditional],
+                  phone: doc[KPhone],
+                  totalPrice: doc[KTotalPrice],
+                  state: doc[KOrderState],
+                  docId: doc.id,
+                  email: doc[KUserEmail],
+                  deliveryAddress: doc[KOrderDeliveryAddress],
+                ),
               );
             }
           });
@@ -71,7 +73,11 @@ class _ViewOrdersState extends State<ViewOrders> {
                     subtitle: Text(
                         '${orders[index].phone} , ${orders[index].totalPrice}'),
                     trailing: TextButton(
-                      onPressed: () => changeState(orders[index].docId),
+                      onPressed: () {
+                        if (orders[index].state == 'Active') {
+                          changeState(orders[index].docId);
+                        }
+                      },
                       child: Text(
                         orders[index].state,
                         style: TextStyle(
@@ -86,7 +92,7 @@ class _ViewOrdersState extends State<ViewOrders> {
             ),
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
@@ -102,7 +108,7 @@ class _ViewOrdersState extends State<ViewOrders> {
           ),
           body: Column(
             children: [
-              TabBar(tabs: [
+              const TabBar(tabs: [
                 Tab(
                   child: Text(
                     "Active",

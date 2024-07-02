@@ -1,9 +1,16 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+
 const KProductCollection = 'products';
 const KProductName = 'name';
 const KProductPrice = 'price';
 const KProductDescription = 'description';
 const KProductImageUrl = 'imageUrl';
+const KProductImages = 'images';
+const KProductDiscount = 'discount';
 const KOrders = 'orders';
+const KOrderDeliveryAddress = 'deliveryAddress';
 const KOrderState = 'state';
 const KOrderStateActive = 'Active';
 const KOrderStateFinished = 'Finished';
@@ -22,3 +29,4 @@ const KUserPhone = 'phone';
 const KUserAddress = 'address';
 const KUserLoggedIn = 'logged';
 const KOrderAdditional = 'additional';
+const Color KGreyText = Colors.grey;

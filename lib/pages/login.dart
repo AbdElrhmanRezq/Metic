@@ -15,14 +15,15 @@ class Login extends StatelessWidget {
   Auth _auth = Auth();
   String _email = '';
   String _password = '';
-  
+  String adminPassword = 'password12345678';
+  String adminEmail = 'admin_crescendo@gmail.com';
   final GlobalKey<FormState> _key = GlobalKey<FormState>();
   static const String id = 'login';
 
   @override
   Widget build(BuildContext context) {
     bool isAdmin = Provider.of<AdminMode>(context).isAdmin;
-
+    bool isObsecure = true;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: ProgressHUD(

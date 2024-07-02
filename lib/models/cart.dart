@@ -1,11 +1,12 @@
 import 'package:crescendo/models/cart_item.dart';
 import 'package:crescendo/models/product.dart';
+import 'package:crescendo/models/product_multi_photos.dart';
 import 'package:flutter/material.dart';
 
 class Cart extends ChangeNotifier {
   late List<CartItem> items = [];
 
-  String addItem(Product product, int quantity, BuildContext context) {
+  String addItem(MultiProduct product, int quantity, BuildContext context) {
     bool inCartAlready = false;
 
     for (var item in items) {
