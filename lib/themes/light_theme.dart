@@ -13,6 +13,6 @@ ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
       background: Colors.white,
-      primary: Colors.white as Color,
+      primary: Color.fromARGB(255, 241, 241, 241) as Color,
       secondary: Colors.deepPurple as Color,
     ));

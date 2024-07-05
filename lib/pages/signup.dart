@@ -24,12 +24,12 @@ class Signup extends StatelessWidget {
     String _phone = '';
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: ProgressHUD(
         child: Form(
           key: _key,
           child: SafeArea(
               child: Container(
-            color: Colors.white,
             child: ListView(children: [
               SizedBox(height: height * 0.17),
               Padding(
@@ -106,7 +106,7 @@ class Signup extends StatelessWidget {
                         child: Text(
                           "Signup",
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              color: KMetic, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -124,7 +124,7 @@ class Signup extends StatelessWidget {
                     },
                     child: Text(
                       "Login Now",
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: KMetic),
                     ),
                   )
                 ],

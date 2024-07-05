@@ -30,3 +30,4 @@ const KUserAddress = 'address';
 const KUserLoggedIn = 'logged';
 const KOrderAdditional = 'additional';
 const Color KGreyText = Colors.grey;
+const Color KMetic = Color.fromARGB(255, 220, 71, 71);

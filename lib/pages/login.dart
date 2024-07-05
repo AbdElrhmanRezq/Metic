@@ -26,12 +26,12 @@ class Login extends StatelessWidget {
     bool isObsecure = true;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: ProgressHUD(
         child: Form(
           key: _key,
           child: SafeArea(
               child: Container(
-            color: Colors.white,
             child: ListView(children: [
               SizedBox(height: height * 0.17),
               CutsomLogo(percent: 0.25),
@@ -63,7 +63,7 @@ class Login extends StatelessWidget {
                         },
                         child: Text(
                           "Forgot password?",
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: KMetic),
                         ),
                       ),
                     ],
@@ -88,7 +88,7 @@ class Login extends StatelessWidget {
                         child: Text(
                           "Login",
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              color: KMetic, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -106,7 +106,7 @@ class Login extends StatelessWidget {
                     },
                     child: const Text(
                       "Register Now",
-                      style: TextStyle(color: Colors.blue),
+                      style: TextStyle(color: KMetic),
                     ),
                   )
                 ],

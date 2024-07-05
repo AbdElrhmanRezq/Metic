@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 
 import '../../components/custom_cart_button.dart';
+import '../../consts.dart';
 
 class MyHiddenDrawer extends StatefulWidget {
   static final String id = 'hidden-drawer';
@@ -18,8 +19,7 @@ class MyHiddenDrawer extends StatefulWidget {
 
 class _MyHiddenDrawerState extends State<MyHiddenDrawer> {
   final selectedText = TextStyle(
-      color: const Color.fromARGB(255, 255, 255, 255),
-      fontWeight: FontWeight.bold);
+      color: Color.fromARGB(255, 48, 48, 48), fontWeight: FontWeight.bold);
   final baseText = TextStyle(color: Colors.grey, fontWeight: FontWeight.normal);
   List<ScreenHiddenDrawer> _pages = [];
   @override
@@ -30,36 +30,29 @@ class _MyHiddenDrawerState extends State<MyHiddenDrawer> {
               name: "Home",
               baseStyle: baseText,
               selectedStyle: selectedText,
-              colorLineSelected: Colors.deepPurple),
+              colorLineSelected: KMetic),
           const HomePage()),
       ScreenHiddenDrawer(
           ItemHiddenMenu(
               name: "Profile",
               baseStyle: baseText,
               selectedStyle: selectedText,
-              colorLineSelected: Colors.deepPurple),
+              colorLineSelected: KMetic),
           const Profile()),
       ScreenHiddenDrawer(
           ItemHiddenMenu(
               name: "My orders",
               baseStyle: baseText,
               selectedStyle: selectedText,
-              colorLineSelected: Colors.deepPurple),
+              colorLineSelected: KMetic),
           const UserOrders()),
       ScreenHiddenDrawer(
           ItemHiddenMenu(
               name: "About us",
               baseStyle: baseText,
               selectedStyle: selectedText,
-              colorLineSelected: Colors.deepPurple),
+              colorLineSelected: KMetic),
           const AboutUs()),
-      ScreenHiddenDrawer(
-          ItemHiddenMenu(
-              name: "About our Products",
-              baseStyle: baseText,
-              selectedStyle: selectedText,
-              colorLineSelected: Colors.deepPurple),
-          const AboutProducts()),
     ];
   }
 
@@ -72,7 +65,12 @@ class _MyHiddenDrawerState extends State<MyHiddenDrawer> {
       initPositionSelected: 0,
       slidePercent: 50,
       actionsAppBar: [const CustomCartButton()],
-      tittleAppBar: Text("Metics"),
+      tittleAppBar: Container(
+          height: 120, child: Image.asset("images/logo/metic_red_p.png")),
+      leadingAppBar: Icon(
+        Icons.menu,
+        color: KMetic,
+      ),
     );
   }
 }

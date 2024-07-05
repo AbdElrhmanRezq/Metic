@@ -1,3 +1,4 @@
+import 'package:crescendo/consts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -40,10 +41,9 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.grey[600]),
+        iconTheme: IconThemeData(color: KMetic),
         elevation: double.minPositive,
       ),
       body: SafeArea(
@@ -61,7 +61,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.grey[200]),
+                    color: Theme.of(context).colorScheme.primary),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
@@ -85,8 +85,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                     padding: EdgeInsets.all(12.0),
                     child: Text(
                       "Reset password",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: KMetic,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     ),
                   ))),
             )

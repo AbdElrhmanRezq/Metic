@@ -77,7 +77,7 @@ class _ProductInfoState extends State<ProductInfo> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(KBorderRadius),
                           child: FadeInImage.assetNetwork(
-                            placeholder: 'images/holders/logo.jpg',
+                            placeholder: 'images/logo/metic_red_p.png',
                             image: _product.imageUrls?[index] as String,
                             fit: BoxFit.fill,
                           ),

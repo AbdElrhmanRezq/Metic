@@ -95,7 +95,8 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius:
                                           BorderRadius.circular(KBorderRadius),
                                       child: FadeInImage.assetNetwork(
-                                        placeholder: 'images/holders/logo.jpg',
+                                        placeholder:
+                                            'images/logo/metic_red_p.png',
                                         image: products[index].imageUrls?[0]
                                             as String,
                                         fit: BoxFit.fill,

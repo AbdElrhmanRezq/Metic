@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../consts.dart';
+
 class CustomCartButton extends StatelessWidget {
   const CustomCartButton({super.key});
 
@@ -11,7 +13,7 @@ class CustomCartButton extends StatelessWidget {
         },
         icon: Icon(
           Icons.shopping_cart,
-          color: Theme.of(context).colorScheme.secondary,
+          color: KMetic,
         ));
   }
 }

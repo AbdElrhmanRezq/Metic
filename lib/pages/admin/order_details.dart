@@ -36,6 +36,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             ));
           });
           return Scaffold(
+            appBar: AppBar(),
             body: Container(
               color: Theme.of(context).colorScheme.background,
               child: ListView.builder(

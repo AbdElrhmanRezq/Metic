@@ -10,7 +10,7 @@ class CutsomLogo extends StatelessWidget {
     return Container(
       height: height * 0.18,
       child: Image(
-        image: AssetImage('images/logo.png'),
+        image: AssetImage('images/logo/metic_red_p.png'),
       ),
     );
   }
